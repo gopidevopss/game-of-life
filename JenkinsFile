@@ -14,12 +14,12 @@ pipeline{
        stage('source code'){
            steps{
         git url:'https://github.com/gopidevopss/game-of-life.git',
-            branch: '${BRANCH}'
+            branch: "${params.BRANCH}"
            }
        }
        stage('build the package'){
            steps{
-           sh script: 'mvn ${GOAL}'
+           sh script: "mvn ${params.GOAL}"
            }
        }
 
