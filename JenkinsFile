@@ -12,6 +12,7 @@ pipeline{
     }
    stages{
        stage('source code'){
+           agent {label 'jdk8'}
            steps{
         git url:'https://github.com/gopidevopss/game-of-life.git',
             branch: "${params.BRANCH}"
