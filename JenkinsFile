@@ -3,17 +3,23 @@ pipeline{
     environment{
         AWS_ACCESS_KEY=credentials('jenkins-aws-secret-key-id')
     }
-    
+    parameters{
+        
+        choice(name: 'GOAL', choices: ['package', 'clean package', 'compile'])
+
+        choice(name: 'BRANCH', choices: ['master', 'main', 'develop'])
+
+    }
    stages{
        stage('source code'){
            steps{
         git url:'https://github.com/gopidevopss/game-of-life.git',
-            branch: 'master'
+            branch: '${BRANCH}'
            }
        }
        stage('build the package'){
            steps{
-           sh script: 'mvn clean package'
+           sh script: 'mvn ${GOAL}'
            }
        }
 
