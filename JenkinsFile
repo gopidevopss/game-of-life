@@ -21,6 +21,7 @@ pipeline{
        stage('build the package'){
            steps{
            sh script: "mvn ${params.GOAL}"
+           stash includes: '**/*.war',  name: 'builtSources'
            }
        }
 
@@ -33,6 +34,12 @@ pipeline{
        stage('reporting'){
            steps{
            junit testResults: '**/surefire-reports/*.xml'
+           }
+       }
+       stage('deploy'){
+           agent { label 'jdk11'}
+           steps{
+               unstash 'builtSources'
            }
        }
    }
