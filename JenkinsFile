@@ -18,30 +18,22 @@ pipeline{
             branch: "${params.BRANCH}"
            }
        }
-       stage('build the package'){
+       stage('build the package with sonarqube'){
            steps{
-           sh script: "mvn ${params.GOAL}"
-           stash includes: '**/*.war',  name: 'builtSources'
+          withSonarQubeEnv('sonar') {
+                sh 'mvn clean package sonar:sonar'
+              }
            }
        }
 
-       stage('archiving the package'){
-           steps{
-           archiveArtifacts artifacts: '**/*.war'
-           }
-       }
+      
 
        stage('reporting'){
            steps{
            junit testResults: '**/surefire-reports/*.xml'
            }
        }
-       stage('deploy'){
-           agent { label 'jdk11'}
-           steps{
-               unstash 'builtSources'
-           }
-       }
+      
    }
 
    post{
